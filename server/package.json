@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "node --inspect=0.0.0.0:9229 --require ts-node/register src/app.ts",
+    "dev": "node --inspect=0.0.0.0:9228 --require ts-node/register src/app.ts",
     "lint": "eslint --ext .ts .",
     "build": "tsc",
     "test": "jest"

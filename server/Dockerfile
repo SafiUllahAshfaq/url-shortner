@@ -10,9 +10,9 @@ RUN npm install
 
 COPY . .
 
-ENV NODE_OPTIONS="--inspect=0.0.0.0:9229"
+ENV NODE_OPTIONS="--inspect=0.0.0.0:9228"
 
-EXPOSE 9229
-EXPOSE 3000
+EXPOSE 9228
+EXPOSE 3009
 
 CMD ["npm", "run", "dev"]

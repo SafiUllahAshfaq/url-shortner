@@ -3,8 +3,8 @@ services:
   url_shortener_app:
     build: .
     ports:
-      - "3000:3000"
-      - "9229:9229"
+      - "3009:3009"
+      - "9228:9228"
     volumes:
       - .:/app
     environment:
