@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/app.js",
-    "dev": "node --inspect=0.0.0.0:9228 --require ts-node/register src/app.ts",
+    "dev": "nodemon --inspect=9228 --require ts-node/register src/app.ts",
     "lint": "eslint --ext .ts .",
     "build": "tsc",
     "test": "jest"
@@ -26,5 +26,10 @@
   },
   "engines": {
     "node": ">=16"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "node --require ts-node/register"
+    }
   }
 }
