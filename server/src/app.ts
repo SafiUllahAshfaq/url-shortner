@@ -1,14 +1,28 @@
 import express from "express";
 
-const app = express();
-const port = process.env.PORT || 3009;
+import config from "./config/config";
+import { connectDB } from "./config/db";
+import { attachMiddlewares } from "./middlewares";
+import { logger } from "./shared/logger";
+import { urlShortner } from "./url-shortner/routes";
 
-app.use(express.json());
+/**
+ * Start server only if the connection to DB was successful
+ */
+connectDB().then(() => {
+  const app = express();
+  const port = config.SERVER_PORT;
 
-app.use("/ping", (_req, res) => {
-  res.status(200).send("pong");
-});
+  attachMiddlewares(app);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  // Register routes
+  app.use("/api", urlShortner);
+
+  app.use("/ping", (_req, res) => {
+    res.status(200).send("pong");
+  });
+
+  app.listen(port, () => {
+    logger.info(`Server is running on port ${port}`);
+  });
 });
