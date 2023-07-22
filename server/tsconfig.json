@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Use ES2022 as the target version
+    "module": "commonjs",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true, // Enable interop with CommonJS modules
+    "forceConsistentCasingInFileNames": true, // Ensure consistent casing of file names
+    "resolveJsonModule": true, // Enable importing JSON modules
+    "baseUrl": "./", // Set the base directory for resolving modules
+    "paths": {
+      // Add any custom path mappings here if needed
+      // Example: "@utils/*": ["src/utils/*"]
+    },
+    "skipLibCheck": true, // Skip type checking of declaration files in node_modules
+    "declaration": true, // Generate declaration files (.d.ts) for TypeScript modules
+    "sourceMap": true // Generate source maps for debugging
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}

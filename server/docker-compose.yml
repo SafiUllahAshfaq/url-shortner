@@ -1,0 +1,23 @@
+version: "3"
+services:
+  url_shortener_app:
+    build: .
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - url_shortener_db
+
+  url_shortener_db:
+    image: "mongo:latest"
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodb_data:
