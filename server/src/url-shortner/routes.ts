@@ -16,5 +16,5 @@ urlShortner.get("/url/:shortUrl", hasShortUrl, getOriginalUrl);
  * 2. "isValidUrl" middleware is a preventive measure so the users
  *      don't send invalid urls to the database
  */
-urlShortner.use(rateLimiter(50, 10));
+urlShortner.use(rateLimiter(60, 60));
 urlShortner.post("/url", hasOriginalUrl, isValidUrl, createShortUrl);
