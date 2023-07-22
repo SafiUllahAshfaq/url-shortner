@@ -8,8 +8,8 @@ import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
  */
 /**
  * @description Rate limiting middleware
- * @param maxRequests {number} allowed requests
- * @param time {number} fixed time in minutes
+ * @param maxRequests {number} allowed requests. Default is 100 requests
+ * @param time {number} fixed time in minutes. Default is 15 minutes
  * @example rateLimiter(100, 15) // 100 requests per 15 minutes
  */
 export const rateLimiter = (
