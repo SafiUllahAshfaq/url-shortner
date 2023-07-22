@@ -1,6 +1,7 @@
 version: "3"
 services:
-  url_shortener_app:
+  app:
+    container_name: "url_shortener_app"
     build: .
     ports:
       - "3009:3009"
@@ -9,15 +10,35 @@ services:
       - .:/app
     environment:
       - NODE_ENV=development
+      - SERVER_PORT=3009
+      - DB_HOST=url_shortener_db
+      - DB_PORT=27017
+      - DB_NAME=urls
+      - BASE_URL=tier.app
+      - REDIS_HOST=url_shortener_redis
+      - REDIS_PORT=6379
     depends_on:
-      - url_shortener_db
+      - db
+      - redis
 
-  url_shortener_db:
+  db:
     image: "mongo:latest"
+    container_name: "url_shortener_db"
     volumes:
       - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=urls
     ports:
       - "27017:27017"
 
+  redis:
+    image: "redis:7.0.12-alpine"
+    container_name: "url_shortener_redis"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 volumes:
   mongodb_data:
+  redis_data:
