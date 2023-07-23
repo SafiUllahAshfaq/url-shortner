@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { getShortUrl, retrieveOriginalUrl } from "./service";
+import * as service from "./service";
 
 export const createShortUrl = async (
   req: Request,
@@ -8,7 +8,7 @@ export const createShortUrl = async (
 ): Promise<void> => {
   const { originalUrl } = req.body;
 
-  const shortUrl = await getShortUrl(originalUrl);
+  const shortUrl = await service.createShortUrl(originalUrl);
   res.json({ shortUrl });
 };
 
@@ -18,7 +18,7 @@ export const getOriginalUrl = async (
 ): Promise<void> => {
   const { shortUrl } = req.params;
 
-  const urlData = await retrieveOriginalUrl(shortUrl);
+  const urlData = await service.getOriginalUrl(shortUrl);
 
   if (!urlData) {
     res.status(404).json({ error: "URL not found!" });
