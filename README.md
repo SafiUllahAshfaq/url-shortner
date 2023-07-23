@@ -1,5 +1,37 @@
 # url-shortner
 
+### Notes for reviewer
+
+**I have put inline multiple "NOTE" in the codebase for communicating my decision making. Revieweing them will be super helpful in evaluating what was going on in my mind while attempting this challenge**
+
+#### - Database
+
+- I have decided to go with MongoDB as this is a simple CRUD application and MongoDB is a good fit for such applications
+- Being a NoSQL database, it is easy to scale MongoDB horizontally by adding more nodes to the cluster. This will help in scaling the application in future
+
+#### - Caching
+
+- I am using redis cache to store shortUrl -> originalUrl mapping. This will help in reducing the load on the database and also helps with faster retrieval of originalUrl for a given shortUrl
+- I have put caching only for GET requests as it is the most frequently used endpoint. We can add caching for POST requests as well if required
+
+#### - Rate Limiting
+
+- For the sake of this assignment, I have used a simple in-memory rate limiter. This will not work in a distributed environment. For a distributed environment, we can use a distributed cache like Redis to store the rate limit data
+- It's a "fixed window" rate limiter but in real world we should use a sliding window or token bucket or some other more sophisticated rate limiter that fits our use case
+- With IP based rate limiting, there are some corner cases that needs to be handled
+  - Replaying an http request with same parameters will result in a rate limit hit
+
+#### - Authentication
+
+- Currently, this API does not require any authentication
+- Implementing authentication mechanisms (e.g., API keys, OAuth, JWT) would definitely help to restrict access to certain endpoints or to track API usage by specific users
+
+#### - Testing
+
+- I tried to cover all the edge cases in the unit tests. I have used Jest as the testing framework
+- I spent some time testing the batch visit update logic but it was taking some time so I decided to skip it for now. _(that is critical code so I will definitely add tests for it in future)_
+
+
 ## Pre Requisites
 
 1. Docker
@@ -10,7 +42,14 @@
 
 1. Clone the repository
 2. Run `cd server`
-3. Run `docker-compose up --build` _(`--detach` if you want to run app in background)_
+
+#### Running the app
+
+- Run `docker-compose up --build` _(`--detach` if you want to run app in background)_
+
+#### Testing the app
+
+- Run `npm run test`
 
 ## API Documentation
 
@@ -114,34 +153,3 @@ Possible Responses
   > ```json
   > Too many requests, please try again later.
   > ```
-
-### Notes for reviewer
-
-**I have put inline multiple "NOTE" in the codebase for communicating my decision making. Revieweing them will be super helpful in evaluating what was going on in my mind while attempting this challenge**
-
-#### - Database
-
-- I have decided to go with MongoDB as this is a simple CRUD application and MongoDB is a good fit for such applications
-- Being a NoSQL database, it is easy to scale MongoDB horizontally by adding more nodes to the cluster. This will help in scaling the application in future.
-
-#### - Caching
-
-- I am using redis cache to store shortUrl -> originalUrl mapping. This will help in reducing the load on the database and also helps with faster retrieval of originalUrl for a given shortUrl.
-- I have put caching only for GET requests as it is the most frequently used endpoint. We can add caching for POST requests as well if required.
-
-#### - Rate Limiting
-
-- For the sake of this assignment, I have used a simple in-memory rate limiter. This will not work in a distributed environment. For a distributed environment, we can use a distributed cache like Redis to store the rate limit data.
-- It's a "fixed window" rate limiter but in real world we should use a sliding window or token bucket or some other more sophisticated rate limiter that fits our use case.
-- With IP based rate limiting, there are some corner cases that needs to be handled
-  - Replaying an http request with same parameters will result in a rate limit hit
-
-#### - Authentication
-
-- Currently, this API does not require any authentication.
-- Implementing authentication mechanisms (e.g., API keys, OAuth, JWT) would definitely help to restrict access to certain endpoints or to track API usage by specific users.
-
----
-
-> **Note**
-> Please note that the base URL and other details in the documentation are placeholders. Feel free to change them.
