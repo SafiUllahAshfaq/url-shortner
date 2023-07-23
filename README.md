@@ -38,6 +38,53 @@
 - An attempt was made to encapsulate all the edge cases within the unit tests, with Jest being the preferred testing framework.
 - There was some exploration around testing the batch visit update logic. However, due to time constraints, this part was skipped for the time being. This critical piece of code will definitely be brought under test coverage in the future.
 
+## Application Flows
+
+1. A user requests the original URL for a given short URL.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant Redis
+    participant MongoDB
+
+    Client->>Server: GET /url/{shortUrl}
+    Server->>Redis: Retrieve originalUrl for shortUrl
+    
+    alt URL found in cache
+        Server->>Client: Original URL + Visits
+        Server--)Redis: Increment visits count
+        Server--)Server: Batch visit to update later in DB
+    else URL not found in cache
+        Server->>MongoDB: Find original URL
+        alt URL found in DB
+            Server->>Client: Original URL + Visits
+            Server--)Redis: Save URL mapping in cache
+            Server--)Redis: Increment visits
+            Server--)Server: Batch visit to update later in DB
+        else URL not found in DB
+            MongoDB->>Server: No data found
+            Server->>Client: 404 Not Found
+        end
+    end
+```
+
+2. A user requests a short URL for a given original URL.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    participant MongoDB
+    Client->>Server: POST /url { originalUrl }
+    Server->>MongoDB: Check if URL exists
+    MongoDB-->>Server: URL does not exist
+    Server->>MongoDB: Save new originalUrl and shortUrl
+    Server->>Client: Return new short URL
+
+```
+
 
 ## Pre Requisites
 
