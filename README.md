@@ -58,6 +58,16 @@ Possible Responses
   > }
   > ```
 
+- If invalid originalUrl is provided in request body
+
+  > STATUS: 400 Bad Request
+  >
+  > ```json
+  > {
+  >   "error": "\"originalUrl\" must be a valid uri"
+  > }
+  > ```
+
 - If rate limit hit _(60 requests per IP per hour allowed)_
 
   > STATUS: 429 Too Many Requests
