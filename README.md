@@ -9,6 +9,11 @@
 - I have decided to go with MongoDB as this is a simple CRUD application and MongoDB is a good fit for such applications
 - Being a NoSQL database, it is easy to scale MongoDB horizontally by adding more nodes to the cluster. This will help in scaling the application in future
 
+#### - Maintaining visits on a shortUrl
+
+- For hot data, i have decided to keep them in Redis
+- For cold data, i have written bulk update logic to save the visits periodically in MongoDB
+
 #### - Caching
 
 - I am using redis cache to store shortUrl -> originalUrl mapping. This will help in reducing the load on the database and also helps with faster retrieval of originalUrl for a given shortUrl
