@@ -47,12 +47,11 @@ const addVisit = async (shortUrl: string) => {
 
 const updateCache = async (
   shortUrl: string,
-  originalUrl?: string
+  originalUrl: string
 ): Promise<void> => {
-  if (originalUrl) {
-    await redisSet(shortUrl, originalUrl);
-  }
+  if (!originalUrl) return;
 
+  await redisSet(shortUrl, originalUrl);
   addVisit(shortUrl);
   await redisIncr(`visits:${shortUrl}`);
   await redisExpire(`visits:${shortUrl}`);
@@ -92,9 +91,11 @@ export const getOriginalUrl = async (
     if (!cachedVisits) cachedVisits = `${url.visits}`;
   }
 
-  updateCache(shortUrl, cachedOriginalUrl).catch((error) =>
-    logger.error("Error while updating cache: ", error)
-  );
+  if (cachedOriginalUrl) {
+    updateCache(shortUrl, cachedOriginalUrl).catch((error) =>
+      logger.error("Error while updating cache: ", error)
+    );
+  }
 
   /**
    * - "cachedVisits" if either comes from Redis or from MongoDB,
