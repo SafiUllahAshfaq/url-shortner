@@ -6,35 +6,34 @@
 
 #### - Database
 
-- I have decided to go with MongoDB as this is a simple CRUD application and MongoDB is a good fit for such applications
-- Being a NoSQL database, it is easy to scale MongoDB horizontally by adding more nodes to the cluster. This will help in scaling the application in future
+- The choice fell on MongoDB, given the nature of this as a straightforward CRUD application, a scenario in which MongoDB excels.
+- As a NoSQL database, MongoDB presents the ease of horizontal scalability by integrating more nodes into the cluster. This feature aligns well with future application scaling plans.
 
 #### - Maintaining visits on a shortUrl
 
-- For hot data, i have decided to keep them in Redis
-- For cold data, i have written bulk update logic to save the visits periodically in MongoDB
+- The choice for handling hot data leaned towards Redis.
+- A bulk update logic has been established to periodically store cold data, or visit counts, in MongoDB.
 
 #### - Caching
 
-- I am using redis cache to store shortUrl -> originalUrl mapping. This will help in reducing the load on the database and also helps with faster retrieval of originalUrl for a given shortUrl
-- I have put caching only for GET requests as it is the most frequently used endpoint. We can add caching for POST requests as well if required
+- Redis cache has been employed to manage the mapping from shortUrl to originalUrl. This strategy reduces database load and expedites the retrieval of originalUrl from a given shortUrl.
+- Caching has been primarily applied for GET requests, considering their high frequency of use. However, the system is flexible enough to extend caching to POST requests, if necessary.
 
 #### - Rate Limiting
 
-- For the sake of this assignment, I have used a simple in-memory rate limiter. This will not work in a distributed environment. For a distributed environment, we can use a distributed cache like Redis to store the rate limit data
-- It's a "fixed window" rate limiter but in real world we should use a sliding window or token bucket or some other more sophisticated rate limiter that fits our use case
-- With IP based rate limiting, there are some corner cases that needs to be handled
-  - Replaying an http request with same parameters will result in a rate limit hit
+- A straightforward in-memory rate limiter was adopted for this assignment. However, in a distributed setting, a distributed cache like Redis would be more suitable for storing rate limit data.
+- Presently, the system employs a "fixed window" rate limiter. In a more expansive scenario, other sophisticated rate limiters like a sliding window or token bucket could be considered.
+- With IP-based rate limiting, certain corner cases need careful handling. For instance, replaying an HTTP request with identical parameters could result in a rate limit hit.
 
 #### - Authentication
 
-- Currently, this API does not require any authentication
-- Implementing authentication mechanisms (e.g., API keys, OAuth, JWT) would definitely help to restrict access to certain endpoints or to track API usage by specific users
+- At this stage, the API does not necessitate any authentication.
+- Implementing authentication mechanisms (e.g., API keys, OAuth, JWT) would be a productive move to regulate access to specific endpoints or monitor API usage by individual users.
 
 #### - Testing
 
-- I tried to cover all the edge cases in the unit tests. I have used Jest as the testing framework
-- I spent some time testing the batch visit update logic but it was taking some time so I decided to skip it for now. _(that is critical code so I will definitely add tests for it in future)_
+- An attempt was made to encapsulate all the edge cases within the unit tests, with Jest being the preferred testing framework.
+- There was some exploration around testing the batch visit update logic. However, due to time constraints, this part was skipped for the time being. This critical piece of code will definitely be brought under test coverage in the future.
 
 
 ## Pre Requisites
