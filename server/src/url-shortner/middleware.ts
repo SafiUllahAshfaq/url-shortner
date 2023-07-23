@@ -24,11 +24,11 @@ const validateRequest = (
  * Define the schema for the request body
  */
 const createShortUrlSchema = Joi.object({
-  originalUrl: Joi.string().uri().required(),
+  originalUrl: Joi.string().trim().uri().required(),
 });
 
 const redirectShortUrlSchema = Joi.object({
-  shortUrl: Joi.string().required(),
+  shortUrl: Joi.string().trim().required(),
 });
 
 /**
