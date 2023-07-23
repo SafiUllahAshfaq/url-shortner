@@ -4,6 +4,9 @@
 
 **I have put inline multiple "NOTE" in the codebase for communicating my decision making. Revieweing them will be super helpful in evaluating what was going on in my mind while attempting this challenge**
 
+> **Note**
+> ⚠️ This is more or less an initial version of the app, certainly there will be a lot of things to improve on. I am more than happy to hear your feedback on this.
+
 #### - Database
 
 - The choice fell on MongoDB, given the nature of this as a straightforward CRUD application, a scenario in which MongoDB excels.
