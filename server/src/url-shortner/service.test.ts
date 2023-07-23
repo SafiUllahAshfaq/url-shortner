@@ -35,7 +35,7 @@ describe("Short URL service", () => {
   });
 
   describe("getShortUrl", () => {
-    it.skip("should create a new short URL when the original URL does not exist", async () => {
+    it("should create a new short URL when the original URL does not exist", async () => {
       const originalUrl = "https://www.example.com/original-url";
       const expectedShortUrl = BASE_URL + "testShortUrl";
 
