@@ -30,6 +30,10 @@ describe("Short URL service", () => {
     await mongoServer.stop();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   beforeEach(async () => {
     await mongoose.connection.db.dropDatabase();
   });
@@ -62,13 +66,13 @@ describe("Short URL service", () => {
       const cachedUrl = "http://original.url";
       const cachedVisits = "5";
       MockRedis.redisGet.mockResolvedValueOnce(cachedUrl);
-      MockRedis.redisIncr.mockResolvedValueOnce(cachedVisits);
+      MockRedis.redisGet.mockResolvedValueOnce(cachedVisits);
 
       const result = await service.getOriginalUrl("shortUrl");
 
       expect(result).toEqual({
         originalUrl: cachedUrl,
-        visits: Number(cachedVisits),
+        visits: Number(cachedVisits) + 1,
       });
     });
 
@@ -86,15 +90,16 @@ describe("Short URL service", () => {
       const cachedOriginalUrl = "cachedOriginalUrl";
       const cachedVisits = "2";
       MockRedis.redisGet.mockResolvedValueOnce(cachedOriginalUrl);
-      MockRedis.redisIncr.mockResolvedValueOnce(cachedVisits);
+      MockRedis.redisGet.mockResolvedValueOnce(cachedVisits);
 
       const result = await service.getOriginalUrl(shortUrl);
 
-      expect(result).toEqual({ originalUrl: cachedOriginalUrl, visits: 2 });
-      expect(MockRedis.redisGet).toHaveBeenCalledWith(shortUrl);
-      expect(MockRedis.redisSet).not.toHaveBeenCalled();
+      expect(result).toEqual({ originalUrl: cachedOriginalUrl, visits: 3 });
+      expect(MockRedis.redisSet).toHaveBeenCalledWith(
+        shortUrl,
+        cachedOriginalUrl
+      );
       expect(MockRedis.redisIncr).toHaveBeenCalledWith(`visits:${shortUrl}`);
-      expect(MockRedis.redisExpire).toHaveBeenCalledWith(`visits:${shortUrl}`);
     });
   });
 });

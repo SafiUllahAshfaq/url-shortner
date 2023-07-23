@@ -45,6 +45,19 @@ const addVisit = async (shortUrl: string) => {
   }
 };
 
+const updateCache = async (
+  shortUrl: string,
+  originalUrl?: string
+): Promise<void> => {
+  if (originalUrl) {
+    await redisSet(shortUrl, originalUrl);
+  }
+
+  addVisit(shortUrl);
+  await redisIncr(`visits:${shortUrl}`);
+  await redisExpire(`visits:${shortUrl}`);
+};
+
 /**
  * Public functions
  */
@@ -65,20 +78,29 @@ export const createShortUrl = async (originalUrl: string): Promise<string> => {
 export const getOriginalUrl = async (
   shortUrl: string
 ): Promise<{ originalUrl: string; visits: number } | null> => {
-  let cachedOriginalUrl = await redisGet(shortUrl);
+  let [cachedOriginalUrl, cachedVisits] = await Promise.all([
+    redisGet(shortUrl),
+    redisGet(`visits:${shortUrl}`),
+  ]);
 
   if (!cachedOriginalUrl) {
     const url = await Url.findOne({ shortUrl });
     if (!url) return null;
 
     cachedOriginalUrl = url.originalUrl;
-    redisSet(shortUrl, cachedOriginalUrl);
+
+    if (!cachedVisits) cachedVisits = `${url.visits}`;
   }
 
-  addVisit(shortUrl);
-  const visitsKey = `visits:${shortUrl}`;
-  const cachedVisits = await redisIncr(visitsKey);
-  await redisExpire(visitsKey);
+  updateCache(shortUrl, cachedOriginalUrl).catch((error) =>
+    logger.error("Error while updating cache: ", error)
+  );
 
-  return { originalUrl: cachedOriginalUrl, visits: Number(cachedVisits) };
+  /**
+   * - "cachedVisits" if either comes from Redis or from MongoDB,
+   *    have to be incremented by 1 to account for the current visit.
+   * - This way we don't have to wait for the visits in cache to
+   *    be updated before returning the correct updated visits.
+   */
+  return { originalUrl: cachedOriginalUrl, visits: Number(cachedVisits) + 1 };
 };
