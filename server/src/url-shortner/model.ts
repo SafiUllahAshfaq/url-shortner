@@ -22,7 +22,7 @@ const urlSchema = new Schema<IUrl>(
   }
 );
 
-// Create an index on the 'originalUrl' field
 urlSchema.index({ originalUrl: 1 });
+urlSchema.index({ shortUrl: 1 });
 
 export const Url = model<IUrl>("Url", urlSchema);
