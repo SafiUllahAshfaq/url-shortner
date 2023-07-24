@@ -16,6 +16,7 @@
 
 - The choice for handling hot data leaned towards Redis.
 - A bulk update logic has been established to periodically store cold data, or visit counts, in MongoDB.
+- There is a potential issue of data loss if that pod get's killed, we will loose the in-memory bulk visits update. In a real world, we will defnitely go with a read-through cache like Redis.
 
 #### - Caching
 
@@ -50,6 +51,7 @@ sequenceDiagram
     participant MongoDB
 
     Client->>Server: GET /url/{shortUrl}
+    Server->>Server: Check rate limiter
     Server->>Redis: Retrieve originalUrl for shortUrl
     
     alt URL found in cache
@@ -78,6 +80,7 @@ sequenceDiagram
     participant Server
     participant MongoDB
     Client->>Server: POST /url { originalUrl }
+    Server->>Server: Check rate limiter
     Server->>MongoDB: Check if URL exists
     MongoDB-->>Server: URL does not exist
     Server->>MongoDB: Save new originalUrl and shortUrl
