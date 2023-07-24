@@ -3,8 +3,8 @@ import rateLimit, { RateLimitRequestHandler } from "express-rate-limit";
 /**
  * NOTE: Rate limiting strategy could be improved.
  * For simplicity we are
- * 1. using a "fixed window" of 15 minutes (we could use a "sliding window" instead)
- * 2. limiting each IP to 100 requests per windowMs
+ * 1. using a "fixed window" of 60 minutes (we could use a "sliding window" instead)
+ * 2. limiting each IP to 400 requests per windowMs
  */
 /**
  * @description Rate limiting middleware
