@@ -1,6 +1,14 @@
 # url-shortner
 
-### Notes for reviewer
+## Table of Contents
+
+- [Notes for reviewer](#notes-for-reviewer)
+- [Application Flows](#application-flows)
+- [Pre Requisites/Setup Instructions](#pre-requisites)
+- [API Documentation](#api-documentation)
+- [Possible Improvements](#possible-improvements)
+
+## Notes for reviewer
 
 **I have put inline multiple "NOTE" in the codebase for communicating my decision making. Revieweing them will be super helpful in evaluating what was going on in my mind while attempting this challenge**
 
@@ -53,7 +61,7 @@ sequenceDiagram
     Client->>Server: GET /url/{shortUrl}
     Server->>Server: Check rate limiter
     Server->>Redis: Retrieve originalUrl for shortUrl
-    
+
     alt URL found in cache
         Server->>Client: Original URL + Visits
         Server--)Redis: Increment visits count
@@ -88,6 +96,7 @@ sequenceDiagram
 
 ```
 
+---
 
 ## Pre Requisites
 
