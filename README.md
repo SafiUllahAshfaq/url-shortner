@@ -210,3 +210,8 @@ Possible Responses
   > ```json
   > Too many requests, please try again later.
   > ```
+
+#### Possible Improvements
+
+- Use swagger to auto generate and maintain API docs
+- Use a distributed managed Redis service
